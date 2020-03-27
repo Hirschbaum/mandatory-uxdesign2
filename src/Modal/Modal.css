@@ -1,0 +1,113 @@
+* {
+    font-family: "Open Sans", sans-serif;
+}
+
+.modalContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(226, 236, 242, 0.5);
+    position: absolute;
+    top: 0;
+    z-index: 8;
+}
+
+.modalHeadline {
+    display: flex;
+}
+
+.modalHeadline > h3 {
+    margin: 0 0 1.5em 0;
+    color: #484C7F;
+    letter-spacing: 0.1em;
+}
+
+.modalBox {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 350px;
+    height: 180px;
+    background-color: #fff;
+    border-radius: 0.3em;
+}
+
+.modalContainer > .modalBox > p {
+    font-size: 1em;
+    text-align: left;
+    line-height: 1.8em;
+    margin: 0;
+    color: #484C7F;
+}
+
+.modalsButtonsContainer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modalButtons {
+    display: flex;
+    font-weight: 500;
+    background-color: #E2ECF2;
+    letter-spacing: 0.07em;
+    border: 1px solid #E2ECF2;
+    border-radius: 0.3rem;
+    padding: 2%;
+    margin-top: 1em;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.blueButtons {
+    color: #fff;
+    background-color: #484C7F;
+    margin-left: 0.5em;
+}
+
+.modalButtons:hover {
+    cursor: pointer;
+    border: 1px solid #FF6361;
+}
+
+.blueButtons:hover {
+    background-color: #FF6361;
+}
+
+
+@media only screen and (max-width: 580px) {
+    .modalBox {
+        width: 60vw;
+        height: auto;
+    }
+
+    .modalsButtonsContainer {
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modalButtons {
+        display: block;
+        width: 80%;
+        order: 2;
+        text-align: center;
+        padding: 0.75em 0;
+        margin-top: 0.75em;
+    }
+
+    .modalButtons.blueButtons {
+        order: 1;
+        margin-left: 0;
+        margin-top: 1.5em;
+    }
+
+}
