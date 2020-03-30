@@ -18,7 +18,7 @@ function App() {
       </header>
       <main>
         <Router>
-          <Route exact path='/main' component={Main} />
+          <Route exact path='/' component={Main} />
           <Route path='/quiz' component={Quiz} />
           <Route path='/modal' component={Modal} /> {/* just to create modal first */}
         </Router>

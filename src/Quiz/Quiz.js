@@ -1,6 +1,6 @@
 import React from 'react';
 import './Quiz.css';
-import { Helmet } from 'react-helmet';
+//import { Helmet } from 'react-helmet';
 import axios from 'axios';
 
 class Quiz extends React.Component {
@@ -18,6 +18,7 @@ class Quiz extends React.Component {
             .then(response => {
                 let data = response.data.results;
                 console.log(data);
+
                 this.setState({ quiz: response.data.results })
             })
             .catch(error => {
@@ -25,73 +26,82 @@ class Quiz extends React.Component {
             });
     }
 
+
+    changeUnicodes = (arr) => {
+        arr.map((data, index) => {
+            const unicodes = {
+                '&rdquo;': '"',
+                '&#039;': "'",
+                '&quot;': '"',
+                '&ldquo;': '"',
+                '&eacute;': 'é',
+                '&amp;': '&',
+                '&uuml;': 'ü',
+                '&hellip;': '…',
+                '&ntilde;': 'ñ',
+            };
+            return arr.question.replace(/&#?\w+;/g, match => unicodes[match]);
+        });
+    }
+
     render() {
 
         return (
-            <div>
-                <div>
+            <div style={{marginLeft: '15vw', marginRight: '15vw', width: '60vw'}}>
+                <div style={{display: 'flex', flexDirection: 'column', flexWrap: 'wrap', justifyContent: 'center'}}>
                     <h1>Quiz</h1>
-                    {this.state.quiz.map(x => (
 
-                        <div key={x}>
+                    {this.state.quiz.map((x, index) => {
+                        const unicodes = {
+                            '&rdquo;': '"',
+                            '&#039;': "'",
+                            '&quot;': '"',
+                            '&ldquo;': '"',
+                            '&eacute;': 'é',
+                            '&amp;': '&',
+                            '&uuml;': 'ü',
+                            '&hellip;': '…',
+                            '&ntilde;': 'ñ',
+                        };
+                        return (<div className='question'>
+                            <h4>{index + 1 + '. '}{x.question.replace(/&#?\w+;/g, match => unicodes[match])}</h4>
 
-                            <p> {x.question}</p>
-
-                            <div className="mdc-form-field">
-                                <div className="mdc-radio">
-                                    <input className="mdc-radio__native-control" type="radio" id="x.correct_answer" name={x.question} />
-                                    <div className="mdc-radio__background">
-                                        <div className="mdc-radio__outer-circle"></div>
-                                        <div className="mdc-radio__inner-circle"></div>
+                            <div className="answers">
+                                <div className="mdc-form-field">
+                                    <div className="mdc-radio">
+                                        <input className="mdc-radio__native-control" type="radio" id="x.correct_answer" name={x.question} />
+                                        <div className="mdc-radio__background">
+                                            <div className="mdc-radio__outer-circle"></div>
+                                            <div className="mdc-radio__inner-circle"></div>
+                                        </div>
+                                        <div className="mdc-radio__ripple"></div>
                                     </div>
-                                    <div className="mdc-radio__ripple"></div>
+                                    <label htmlFor={x.correct_answer}>{x.correct_answer.replace(/&#?\w+;/g, match => unicodes[match])}</label>
                                 </div>
-                                <label htmlFor={x.correct_answer}>{x.correct_answer}</label>
+
+                                {x.incorrect_answers.map((y, index) => {
+                                    return (
+                                        <div className="mdc-form-field">
+                                            <div className="mdc-radio">
+                                                <input className="mdc-radio__native-control" type="radio" id={y[index]} name={x.question} />
+                                                <div className="mdc-radio__background">
+                                                    <div className="mdc-radio__outer-circle"></div>
+                                                    <div className="mdc-radio__inner-circle"></div>
+                                                </div>
+                                                <div className="mdc-radio__ripple"></div>
+                                            </div>
+                                            <label htmlFor={y[index]}>{y.replace(/&#?\w+;/g, match => unicodes[match])}</label>
+                                        </div>
+                                    )
+                                })
+                                }
                             </div>
-
-                            <div className="mdc-form-field">
-                                <div className="mdc-radio">
-                                    <input className="mdc-radio__native-control" type="radio" id={x.incorrect_answers[0]} name={x.question} />
-                                    <div className="mdc-radio__background">
-                                        <div className="mdc-radio__outer-circle"></div>
-                                        <div className="mdc-radio__inner-circle"></div>
-                                    </div>
-                                    <div className="mdc-radio__ripple"></div>
-                                </div>
-                                <label htmlFor={x.incorrect_answers[0]}>{x.incorrect_answers[0]}</label>
-                            </div>
-
-                            {x.incorrect_answers.length >= 2 ?
-                            <> 
-                            <div className="mdc-form-field">
-                                <div className="mdc-radio">
-                                    <input className="mdc-radio__native-control" type="radio" id={x.incorrect_answers[1]} name={x.question} />
-                                    <div className="mdc-radio__background">
-                                        <div className="mdc-radio__outer-circle"></div>
-                                        <div className="mdc-radio__inner-circle"></div>
-                                    </div>
-                                    <div className="mdc-radio__ripple"></div>
-                                </div>
-                                <label htmlFor={x.incorrect_answers[1]}>{x.incorrect_answers[1]}</label>
-                            </div>
-
-                            <div className="mdc-form-field">
-                                <div className="mdc-radio">
-                                    <input className="mdc-radio__native-control" type="radio" id={x.incorrect_answers[2]} name={x.question} />
-                                    <div className="mdc-radio__background">
-                                        <div className="mdc-radio__outer-circle"></div>
-                                        <div className="mdc-radio__inner-circle"></div>
-                                    </div>
-                                    <div className="mdc-radio__ripple"></div>
-                                </div>
-                                <label htmlFor={x.incorrect_answers[2]}>{x.incorrect_answers[2]}</label>
-                            </div> 
-                            </>
-                            : null }
-
                         </div>
+                        )
+                    })}
 
-                    ))}
+                    <button className='quiz__button'>Submit</button>
+                    <br/>
 
                 </div>
             </div>
@@ -100,3 +110,4 @@ class Quiz extends React.Component {
 }
 
 export default Quiz;
+
