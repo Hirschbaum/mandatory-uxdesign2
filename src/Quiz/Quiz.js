@@ -29,7 +29,9 @@ class Quiz extends React.Component {
     hanldeRadioSelect = (e) => {
         if (e.target.checked) {
             console.log(e.target.value); //empty
-            this.setState({ choosenAnswers: e.target.value })
+            let joined = this.state.choosenAnswers.concat([e.target.value]);
+            this.setState({ choosenAnswers: joined })
+            //this.setState({ choosenAnswers: e.target.value })
         }
         //let choosen = e.target.checked;
         //console.log(choosen); //true
@@ -105,15 +107,17 @@ class Quiz extends React.Component {
                                             className="mdc-form-field"
                                             key={answer}
                                         >
-                                            <div className="mdc-radio"  
-                                                    onChange={e => this.hanldeRadioSelect(e)}
-                                                    choosen={this.choosenAnswers}
-                                                    value={answer}>
+                                            <div className="mdc-radio">  
+                                                    
                                                 <input
                                                     className="mdc-radio__native-control"
                                                     type="radio"
                                                     id={answer}
                                                     name={x.question}
+
+                                                    onChange={e => this.hanldeRadioSelect(e)}
+                                                    choosen={this.choosenAnswers}
+                                                    value={answer}
                                                 />
                                                 <div className="mdc-radio__background">
                                                     <div className="mdc-radio__outer-circle"></div>
