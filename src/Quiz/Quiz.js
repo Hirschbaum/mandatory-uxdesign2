@@ -9,13 +9,13 @@ class Quiz extends React.Component {
 
         this.state = {
             quiz: [],
-            allCorrectAnswers: [],
+            correctAnswers: [],
             choosenAnswers: [],
         };
     }
 
     //----- random shuffle function for the answers 
-    shuffle = (arr) => { 
+    shuffle = (arr) => {
         for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * i);
             const temporary = arr[i];
@@ -23,6 +23,18 @@ class Quiz extends React.Component {
             arr[j] = temporary;
         }
         return arr;
+    }
+
+    //----- choosen answers
+    hanldeRadioSelect = (e) => {
+        if (e.target.checked) {
+            console.log(e.target.value); //empty
+            this.setState({ choosenAnswers: e.target.value })
+        }
+        //let choosen = e.target.checked;
+        //console.log(choosen); //true
+        //this.setState({ choosenAnswers: choosen });
+        //console.log(this.choosenAnswers);
     }
 
     componentDidMount() {
@@ -34,7 +46,7 @@ class Quiz extends React.Component {
                 let quizNew = []; //it doesn't work, to update state 'quiz' directly with 'dataNew'
 
                 dataCopied.map(x => {
-                    return this.setState({ allCorrectAnswers: x.correct_answer }) 
+                    return this.setState({ correctAnswers: x.correct_answer })
                 })
 
                 dataCopied.map(x => {
@@ -82,23 +94,38 @@ class Quiz extends React.Component {
                             '&eacute;': 'é',
                             '&uuml;': 'ü',
                         };
-                        return (<div className='question-box' key={x.question}>
+                        return (<div className='question-box' key={x.question} >
                             <h4>{index + 1 + '. '}{x.question.replace(/&#?\w+;/g, match => unicodes[match])}</h4>
 
                             <div className="answers">
 
                                 {x.answers.map((answer, index) => {
                                     return (
-                                        <div className="mdc-form-field" key={answer}>
-                                            <div className="mdc-radio">
-                                                <input className="mdc-radio__native-control" type="radio" id={answer} name={x.question} />
+                                        <div
+                                            className="mdc-form-field"
+                                            key={answer}
+                                        >
+                                            <div className="mdc-radio"  
+                                                    onChange={e => this.hanldeRadioSelect(e)}
+                                                    choosen={this.choosenAnswers}
+                                                    value={answer}>
+                                                <input
+                                                    className="mdc-radio__native-control"
+                                                    type="radio"
+                                                    id={answer}
+                                                    name={x.question}
+                                                />
                                                 <div className="mdc-radio__background">
                                                     <div className="mdc-radio__outer-circle"></div>
                                                     <div className="mdc-radio__inner-circle"></div>
                                                 </div>
                                                 <div className="mdc-radio__ripple"></div>
                                             </div>
-                                            <label htmlFor={answer}>{answer.replace(/&#?\w+;/g, match => unicodes[match])}</label>
+                                            <label
+                                                htmlFor={answer}
+                                            >
+                                                {answer.replace(/&#?\w+;/g, match => unicodes[match])}
+                                            </label>
                                         </div>
                                     )
                                 })}
@@ -120,7 +147,7 @@ class Quiz extends React.Component {
 
 export default Quiz;
 
-//onChange => update the choosenAnswers with the checked radio buttons
-//on the correctAnswers filter, the elements, which are included in the choosenAnswers, return the length of the elements
-//const diff = correctAnswers.filter(element => choosenAnswers.includes(element)); 
-//onSubmit, trap the focus and show the Modal, where the scores can be shown
+//onChange => update the choosenAnswers with the checked radio buttons value
+//on the correctAnswers filter, the elements, which are included in the choosenAnswers, and return the length of the matched elements
+//const diff = correctAnswers.filter(element => choosenAnswers.includes(element)); +return length!!!
+//onSubmit, trap the focus and show the Modal, where the scores (diffs length) can be shown
