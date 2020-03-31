@@ -28,15 +28,11 @@ class Quiz extends React.Component {
     //----- choosen answers
     hanldeRadioSelect = (e) => {
         if (e.target.checked) {
-            console.log(e.target.value); //empty
+            console.log(e.target.value); //working finally
             let joined = this.state.choosenAnswers.concat([e.target.value]);
-            this.setState({ choosenAnswers: joined })
-            //this.setState({ choosenAnswers: e.target.value })
+            this.setState({ choosenAnswers: joined });
+            console.log(this.choosenAnswers); //undefined
         }
-        //let choosen = e.target.checked;
-        //console.log(choosen); //true
-        //this.setState({ choosenAnswers: choosen });
-        //console.log(this.choosenAnswers);
     }
 
     componentDidMount() {
