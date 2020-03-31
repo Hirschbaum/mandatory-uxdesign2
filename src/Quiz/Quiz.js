@@ -9,17 +9,48 @@ class Quiz extends React.Component {
 
         this.state = {
             quiz: [],
+            allCorrectAnswers: [],
+            choosenAnswers: [],
         };
+    }
+
+    //----- random shuffle function for the answers 
+    shuffle = (arr) => { 
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * i);
+            const temporary = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temporary;
+        }
+        return arr;
     }
 
     componentDidMount() {
 
         axios.get('https://opentdb.com/api.php?amount=10', {})
             .then(response => {
-                let data = response.data.results;
-                console.log(data);
+                let dataCopied = [...response.data.results];
+                console.log(dataCopied);
+                let quizNew = []; //it doesn't work, to update state 'quiz' directly with 'dataNew'
 
-                this.setState({ quiz: response.data.results })
+                dataCopied.map(x => {
+                    return this.setState({ allCorrectAnswers: x.correct_answer }) 
+                })
+
+                dataCopied.map(x => {
+                    let answers = [...x.incorrect_answers, x.correct_answer]; //concating correct answer into the incorrect answers
+                    let answersShuffled = this.shuffle(answers);
+
+                    let dataNew = {
+                        answers: answersShuffled,
+                        ...x,
+                    }
+
+                    return quizNew.push(dataNew); //it doesn't work, to update state 'quiz' directly with 'dataNew'
+                })
+                console.log(quizNew, 'NEW QUIZ');
+                this.setState({ quiz: quizNew });
+
             })
             .catch(error => {
                 console.log('Error while fetching data from API', error);
@@ -27,28 +58,11 @@ class Quiz extends React.Component {
     }
 
 
-    changeUnicodes = (arr) => {
-        arr.map((data, index) => {
-            const unicodes = {
-                '&rdquo;': '"',
-                '&#039;': "'",
-                '&quot;': '"',
-                '&ldquo;': '"',
-                '&eacute;': 'é',
-                '&amp;': '&',
-                '&uuml;': 'ü',
-                '&hellip;': '…',
-                '&ntilde;': 'ñ',
-            };
-            return arr.question.replace(/&#?\w+;/g, match => unicodes[match]);
-        });
-    }
-
     render() {
 
         return (
-            <div style={{marginLeft: '15vw', marginRight: '15vw', width: '60vw'}}>
-                <div style={{display: 'flex', flexDirection: 'column', flexWrap: 'wrap', justifyContent: 'center'}}>
+            <div style={{ marginLeft: '15vw', marginRight: '15vw', width: '60vw' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap' }}>
                     <h1>Quiz</h1>
 
                     {this.state.quiz.map((x, index) => {
@@ -57,51 +71,46 @@ class Quiz extends React.Component {
                             '&#039;': "'",
                             '&quot;': '"',
                             '&ldquo;': '"',
-                            '&eacute;': 'é',
-                            '&amp;': '&',
-                            '&uuml;': 'ü',
                             '&hellip;': '…',
+                            '&amp;': '&',
                             '&ntilde;': 'ñ',
+                            '&szlig': 'ß',
+                            '&#176': '°',
+                            '&aring': 'å',
+                            '&auml': 'ä',
+                            ' &ouml': 'ö',
+                            '&eacute;': 'é',
+                            '&uuml;': 'ü',
                         };
-                        return (<div className='question'>
+                        return (<div className='question-box' key={x.question}>
                             <h4>{index + 1 + '. '}{x.question.replace(/&#?\w+;/g, match => unicodes[match])}</h4>
 
                             <div className="answers">
-                                <div className="mdc-form-field">
-                                    <div className="mdc-radio">
-                                        <input className="mdc-radio__native-control" type="radio" id="x.correct_answer" name={x.question} />
-                                        <div className="mdc-radio__background">
-                                            <div className="mdc-radio__outer-circle"></div>
-                                            <div className="mdc-radio__inner-circle"></div>
-                                        </div>
-                                        <div className="mdc-radio__ripple"></div>
-                                    </div>
-                                    <label htmlFor={x.correct_answer}>{x.correct_answer.replace(/&#?\w+;/g, match => unicodes[match])}</label>
-                                </div>
 
-                                {x.incorrect_answers.map((y, index) => {
+                                {x.answers.map((answer, index) => {
                                     return (
-                                        <div className="mdc-form-field">
+                                        <div className="mdc-form-field" key={answer}>
                                             <div className="mdc-radio">
-                                                <input className="mdc-radio__native-control" type="radio" id={y[index]} name={x.question} />
+                                                <input className="mdc-radio__native-control" type="radio" id={answer} name={x.question} />
                                                 <div className="mdc-radio__background">
                                                     <div className="mdc-radio__outer-circle"></div>
                                                     <div className="mdc-radio__inner-circle"></div>
                                                 </div>
                                                 <div className="mdc-radio__ripple"></div>
                                             </div>
-                                            <label htmlFor={y[index]}>{y.replace(/&#?\w+;/g, match => unicodes[match])}</label>
+                                            <label htmlFor={answer}>{answer.replace(/&#?\w+;/g, match => unicodes[match])}</label>
                                         </div>
                                     )
-                                })
-                                }
+                                })}
+
                             </div>
+
                         </div>
                         )
                     })}
 
-                    <button className='quiz__button'>Submit</button>
-                    <br/>
+                    <button className="mdc-button mdc-button--raised" style={{ backgroundColor: '#484C7F' }}>  <span className="mdc-button__ripple"></span> Submit</button>
+                    <br />
 
                 </div>
             </div>
@@ -111,3 +120,7 @@ class Quiz extends React.Component {
 
 export default Quiz;
 
+//onChange => update the choosenAnswers with the checked radio buttons
+//on the correctAnswers filter, the elements, which are included in the choosenAnswers, return the length of the elements
+//const diff = correctAnswers.filter(element => choosenAnswers.includes(element)); 
+//onSubmit, trap the focus and show the Modal, where the scores can be shown

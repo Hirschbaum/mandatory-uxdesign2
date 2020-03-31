@@ -9,7 +9,7 @@ import Quiz from './Quiz/Quiz';
 
 function App() {
   return (
-    <div>
+    <>
       <Helmet>
         <title>Quiz Master</title>
       </Helmet>
@@ -23,7 +23,7 @@ function App() {
           <Route path='/modal' component={Modal} /> {/* just to create modal first */}
         </Router>
       </main>
-    </div>
+    </>
   );
 }
 
