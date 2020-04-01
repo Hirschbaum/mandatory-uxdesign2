@@ -11,10 +11,60 @@ class Quiz extends React.Component {
             quiz: [],
             correctAnswers: [],
             choosenAnswers: [],
+            isLoaded: false, //so the submit button doesn't display earlier than the quiz
         };
     }
 
-    //----- random shuffle function for the answers 
+    componentDidMount() {
+        this.getQuiz();
+    }
+
+    getQuiz = () => {
+        axios.get('https://opentdb.com/api.php?amount=10', {})
+            .then(response => {
+                setTimeout(() => {
+                    let dataCopied = [...response.data.results];
+                    console.log(dataCopied);
+                    let quizNew = []; //it doesn't work, to update state 'quiz' directly with 'dataNew'
+
+                    dataCopied.map(x => {
+                        return this.setState({ correctAnswers: [...this.state.correctAnswers, x.correct_answer] })
+                    })
+                    console.log(this.state.correctAnswers, 'correct answers'); //undefined
+
+                    dataCopied.map(x => {
+                        let answers = [...x.incorrect_answers, x.correct_answer]; //concating correct answer into the incorrect answers
+                        let answersShuffled = this.shuffle(answers);
+
+                        let dataNew = {
+                            answers: answersShuffled,
+                            ...x,
+                        }
+
+                        return quizNew.push(dataNew); //it doesn't work, to update state 'quiz' directly with 'dataNew'
+                    })
+                    //console.log(quizNew, 'NEW QUIZ');
+                    this.setState({ quiz: quizNew });
+                    this.setState({ isLoaded: true });
+                })
+            }, 2500)
+
+            .catch(error => {
+                console.log('Error while fetching data from API', error);
+            });
+    }
+
+    //-------------------------------- choosen answers
+    hanldeRadioSelect = (e) => {
+        if (e.target.checked) {
+            //console.log(e.target.value, 'selected Answer'); //working finally
+            let selectedAnswer = e.target.value;
+            this.setState({ choosenAnswers: [...this.state.choosenAnswers, selectedAnswer] });
+            console.log(this.state.choosenAnswers); //working
+        }
+    }
+
+    //----------------------------- random shuffle function for the answers 
     shuffle = (arr) => {
         for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * i);
@@ -24,49 +74,6 @@ class Quiz extends React.Component {
         }
         return arr;
     }
-
-    //----- choosen answers
-    hanldeRadioSelect = (e) => {
-        if (e.target.checked) {
-            console.log(e.target.value); //working finally
-            let joined = this.state.choosenAnswers.concat([e.target.value]);
-            this.setState({ choosenAnswers: joined });
-            console.log(this.choosenAnswers); //undefined
-        }
-    }
-
-    componentDidMount() {
-
-        axios.get('https://opentdb.com/api.php?amount=10', {})
-            .then(response => {
-                let dataCopied = [...response.data.results];
-                console.log(dataCopied);
-                let quizNew = []; //it doesn't work, to update state 'quiz' directly with 'dataNew'
-
-                dataCopied.map(x => {
-                    return this.setState({ correctAnswers: x.correct_answer })
-                })
-
-                dataCopied.map(x => {
-                    let answers = [...x.incorrect_answers, x.correct_answer]; //concating correct answer into the incorrect answers
-                    let answersShuffled = this.shuffle(answers);
-
-                    let dataNew = {
-                        answers: answersShuffled,
-                        ...x,
-                    }
-
-                    return quizNew.push(dataNew); //it doesn't work, to update state 'quiz' directly with 'dataNew'
-                })
-                console.log(quizNew, 'NEW QUIZ');
-                this.setState({ quiz: quizNew });
-
-            })
-            .catch(error => {
-                console.log('Error while fetching data from API', error);
-            });
-    }
-
 
     render() {
 
@@ -103,8 +110,8 @@ class Quiz extends React.Component {
                                             className="mdc-form-field"
                                             key={answer}
                                         >
-                                            <div className="mdc-radio">  
-                                                    
+                                            <div className="mdc-radio">
+
                                                 <input
                                                     className="mdc-radio__native-control"
                                                     type="radio"
@@ -112,7 +119,7 @@ class Quiz extends React.Component {
                                                     name={x.question}
 
                                                     onChange={e => this.hanldeRadioSelect(e)}
-                                                    choosen={this.choosenAnswers}
+                                                    choosen={this.state.choosenAnswers}
                                                     value={answer}
                                                 />
                                                 <div className="mdc-radio__background">
@@ -136,7 +143,12 @@ class Quiz extends React.Component {
                         )
                     })}
 
-                    <button className="mdc-button mdc-button--raised" style={{ backgroundColor: '#484C7F' }}>  <span className="mdc-button__ripple"></span> Submit</button>
+                    {this.state.isLoaded===true ? <button
+                        className="mdc-button mdc-button--raised"
+                        style={{ backgroundColor: '#484C7F' }}
+                    >  <span className="mdc-button__ripple"></span> Submit
+                    </button> : null }
+                    
                     <br />
 
                 </div>
@@ -147,7 +159,7 @@ class Quiz extends React.Component {
 
 export default Quiz;
 
-//onChange => update the choosenAnswers with the checked radio buttons value
+//onChange => update the choosenAnswers with the checked radio buttons value: DONE
 //on the correctAnswers filter, the elements, which are included in the choosenAnswers, and return the length of the matched elements
 //const diff = correctAnswers.filter(element => choosenAnswers.includes(element)); +return length!!!
 //onSubmit, trap the focus and show the Modal, where the scores (diffs length) can be shown
