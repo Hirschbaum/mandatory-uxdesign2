@@ -1,25 +1,14 @@
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import React from 'react';
 import './App.css';
-import { Helmet } from 'react-helmet';
 import Header from './Header/Header';
 import Main from './Main/Main';
-//import Modal from './Modal/Modal';
 import Quiz from './Quiz/Quiz';
 
 function App(props) {
 
-  /*const [showModal, updateModal] = useState(false);
-
-  const handleModal = () => {
-		updateModal(true);
-	}*/
-
   return (
     <>
-      <Helmet>
-        <title>Quiz Master</title>
-      </Helmet>
       <header>
         <Header />
       </header>
@@ -31,7 +20,6 @@ function App(props) {
         </Router>
       </main>
       
-      {/*{showModal ? <Modal scores={scores} /> : null}*/}
     </>
   );
 }

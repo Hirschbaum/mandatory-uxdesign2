@@ -1,6 +1,5 @@
 import React from 'react';
 import './Quiz.css';
-//import { Helmet } from 'react-helmet';
 import axios from 'axios';
 import Modal from './Modal';
 
@@ -12,7 +11,7 @@ class Quiz extends React.Component {
             quiz: [],
             correctAnswers: [],
             choosenAnswers: [],
-            isLoaded: false, //so the submit button doesn't display earlier than the quiz
+            isLoaded: false, //so the submit button doesn't render earlier than the quiz
             scores: [],
             showModal: false,
         };
@@ -25,7 +24,7 @@ class Quiz extends React.Component {
     countScores = () => {
         let diff = this.state.correctAnswers.filter(element => this.state.choosenAnswers.includes(element));
         this.setState({scores: diff.length});
-        console.log(this.state.scores, 'SCORES'); //working
+        console.log('SCORES HERE ', this.state.scores ); //working
     }
 
     getQuiz = () => {
@@ -66,10 +65,10 @@ class Quiz extends React.Component {
     //-------------------------------- choosen answers
     hanldeRadioSelect = (e) => {
         if (e.target.checked) {
-            //console.log(e.target.value, 'selected Answer'); //working finally
+            //console.log(e.target.value, 'selected Answer'); //working
             let selectedAnswer = e.target.value;
             this.setState({ choosenAnswers: [...this.state.choosenAnswers, selectedAnswer] });
-            console.log(this.state.choosenAnswers); //working
+            //console.log('CHOOSEN', this.state.choosenAnswers); //working
         }
     }
 
@@ -131,7 +130,8 @@ class Quiz extends React.Component {
                                                     type="radio"
                                                     id={answer}
                                                     name={x.question}
-
+                                                    scores={this.state.scores}
+                                                    onClick={this.countScores}
                                                     onChange={e => this.hanldeRadioSelect(e)}
                                                     choosen={this.state.choosenAnswers}
                                                     value={answer}
@@ -156,19 +156,18 @@ class Quiz extends React.Component {
                         </div>
                         )
                     })}
-                    
+
                     <br />
 
                     {this.state.isLoaded===true ? 
                     <button
                         onClick={() => this.countScores()}
                         onMouseUp={this.handleModal}
-                        
+                        onKeyUp={this.handleModal}
                         className="mdc-button mdc-button--raised"
                         style={{ backgroundColor: '#484C7F' }}
                     >  <span className="mdc-button__ripple"></span> Submit
-                    </button> 
-                    : null }
+                    </button> : null }
                     
                     <br />
                     
