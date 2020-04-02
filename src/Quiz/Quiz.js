@@ -63,12 +63,6 @@ class Quiz extends React.Component {
             });
     }
 
-    //----show modal, if it is true, function from App.js
-    //handleModal = () => {
-    //    this.setState({showModal: true});
-		//this.props.handleModal(this.state.showModal);
-	//}
-
     //-------------------------------- choosen answers
     hanldeRadioSelect = (e) => {
         if (e.target.checked) {
@@ -79,8 +73,8 @@ class Quiz extends React.Component {
         }
     }
 
-    onMouseUp = () => {
-        this.setState({showModal: true});
+    handleModal = () => {
+        this.setState({showModal: !(this.state.showModal)});
     }
 
     //----------------------------- random shuffle function for the answers 
@@ -96,6 +90,7 @@ class Quiz extends React.Component {
 
     render() {
 
+        //console.log('SHOWMODAL IS ', this.state.showModal)
         return (
             <div style={{ marginLeft: '15vw', marginRight: '15vw', width: '60vw' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap' }}>
@@ -161,11 +156,13 @@ class Quiz extends React.Component {
                         </div>
                         )
                     })}
+                    
+                    <br />
 
                     {this.state.isLoaded===true ? 
                     <button
                         onClick={() => this.countScores()}
-                        onMouseUp={this.onMouseUp}
+                        onMouseUp={this.handleModal}
                         
                         className="mdc-button mdc-button--raised"
                         style={{ backgroundColor: '#484C7F' }}
@@ -175,7 +172,7 @@ class Quiz extends React.Component {
                     
                     <br />
                     
-                    {this.state.showModal ? <Modal scores={this.state.scores} getquiz={this.getQuiz} /> : null}
+                    {this.state.showModal ? <Modal scores={this.state.scores} getQuiz={this.getQuiz} handleModal={this.handleModal} showModal={this.showModal}/> : null}
                 </div>
             </div>
         )
@@ -183,9 +180,3 @@ class Quiz extends React.Component {
 }
 
 export default Quiz;
-
-//onChange => update the choosenAnswers with the checked radio buttons value: DONE
-//on the correctAnswers filter, the elements, which are included in the choosenAnswers, and return the length of the matched elements: DONE
-//const diff = correctAnswers.filter(element => choosenAnswers.includes(element)); +return length!!!: DONE
-//save this length in a state, Scores: DONE
-//onSubmit, trap the focus and show the Modal, where the scores (diffs length) can be shown

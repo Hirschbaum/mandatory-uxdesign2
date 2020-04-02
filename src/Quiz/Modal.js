@@ -1,12 +1,20 @@
 import React from 'react';
 import './Modal.css';
 import ReactDOM from 'react-dom';
+import {Link} from 'react-router-dom';
 
 const Modal = (props) => {
-    /*const handleModal = () => {
-		props.updateModal(false);
-    };*/
     
+    const closeModal = () => {
+        props.handleModal();
+    }
+
+    const newQuiz = () => {
+        closeModal();
+        window.scrollTo(0, 0)
+        props.getQuiz();
+    }
+
     return ReactDOM.createPortal(
         <div className="modalContainer">
             <div className="modalBox">
@@ -15,7 +23,7 @@ const Modal = (props) => {
                 </div>
 
                 <p>
-                    You have answered 
+                    You have answered
                 <span className='correct--answers'> 10/ {props.scores} </span>
                 correctly!
             </p>
@@ -23,14 +31,15 @@ const Modal = (props) => {
 
                 <div className="modalsButtonsContainer">
                     <button className="modalButtons">
-                        Back to Main
-                </button>
+                       <Link style={{textDecoration: 'none'}} to='/'>Back to Main</Link>
+                    </button>
 
                     <button
                         className="modalButtons blueButtons"
+                        onClick={()=> newQuiz()}
                     >
-                        New Quiz
-                </button>
+                        <Link style={{textDecoration: 'none', color: '#fff'}}  to='/quiz'>New Quiz</Link>
+                    </button>
                 </div>
             </div>
         </div>,
