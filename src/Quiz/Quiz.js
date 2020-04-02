@@ -21,6 +21,7 @@ class Quiz extends React.Component {
         this.getQuiz();
     }
 
+    
     countScores = () => {
         let diff = this.state.correctAnswers.filter(element => this.state.choosenAnswers.includes(element));
         this.setState({scores: diff.length});
@@ -54,6 +55,7 @@ class Quiz extends React.Component {
                     //console.log(quizNew, 'NEW QUIZ');
                     this.setState({ quiz: quizNew });
                     this.setState({ isLoaded: true });
+                    window.scrollTo(0, 0);
                 })
             //}, 1500)
 

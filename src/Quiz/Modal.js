@@ -12,7 +12,7 @@ const Modal = (props) => {
 
     const newQuiz = () => {
         closeModal();
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
         props.getQuiz();
     }
 
