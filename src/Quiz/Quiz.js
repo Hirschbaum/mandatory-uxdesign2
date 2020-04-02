@@ -13,6 +13,7 @@ class Quiz extends React.Component {
             choosenAnswers: [],
             isLoaded: false, //so the submit button doesn't display earlier than the quiz
             scores: [],
+            showModal: false,
         };
     }
 
@@ -61,6 +62,11 @@ class Quiz extends React.Component {
             });
     }
 
+    //----show modal, if it is true, function from App.js
+    handleModal = () => {
+		this.props.handleModal(this.state.showModal);
+	}
+
     //-------------------------------- choosen answers
     hanldeRadioSelect = (e) => {
         if (e.target.checked) {
@@ -69,6 +75,10 @@ class Quiz extends React.Component {
             this.setState({ choosenAnswers: [...this.state.choosenAnswers, selectedAnswer] });
             console.log(this.state.choosenAnswers); //working
         }
+    }
+
+    onMouseUp = () => {
+        this.setState({showModal: true});
     }
 
     //----------------------------- random shuffle function for the answers 
@@ -153,7 +163,9 @@ class Quiz extends React.Component {
                     {this.state.isLoaded===true ? 
                     <button
                         onClick={() => this.countScores()}
+                        onMouseUp={this.onMouseUp}
                         scores={this.state.scores}
+                        showmodal={this.showModal}
                         className="mdc-button mdc-button--raised"
                         style={{ backgroundColor: '#484C7F' }}
                     >  <span className="mdc-button__ripple"></span> Submit
