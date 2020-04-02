@@ -12,6 +12,7 @@ class Quiz extends React.Component {
             correctAnswers: [],
             choosenAnswers: [],
             isLoaded: false, //so the submit button doesn't display earlier than the quiz
+            scores: [],
         };
     }
 
@@ -19,10 +20,16 @@ class Quiz extends React.Component {
         this.getQuiz();
     }
 
+    countScores = () => {
+        let diff = this.state.correctAnswers.filter(element => this.state.choosenAnswers.includes(element));
+        this.setState({scores: diff.length});
+        console.log(this.state.scores, 'SCORES'); //working
+    }
+
     getQuiz = () => {
         axios.get('https://opentdb.com/api.php?amount=10', {})
             .then(response => {
-                setTimeout(() => {
+                //setTimeout(() => {
                     let dataCopied = [...response.data.results];
                     console.log(dataCopied);
                     let quizNew = []; //it doesn't work, to update state 'quiz' directly with 'dataNew'
@@ -47,7 +54,7 @@ class Quiz extends React.Component {
                     this.setState({ quiz: quizNew });
                     this.setState({ isLoaded: true });
                 })
-            }, 2500)
+            //}, 1500)
 
             .catch(error => {
                 console.log('Error while fetching data from API', error);
@@ -143,11 +150,15 @@ class Quiz extends React.Component {
                         )
                     })}
 
-                    {this.state.isLoaded===true ? <button
+                    {this.state.isLoaded===true ? 
+                    <button
+                        onClick={() => this.countScores()}
+                        scores={this.state.scores}
                         className="mdc-button mdc-button--raised"
                         style={{ backgroundColor: '#484C7F' }}
                     >  <span className="mdc-button__ripple"></span> Submit
-                    </button> : null }
+                    </button> 
+                    : null }
                     
                     <br />
 
@@ -160,6 +171,7 @@ class Quiz extends React.Component {
 export default Quiz;
 
 //onChange => update the choosenAnswers with the checked radio buttons value: DONE
-//on the correctAnswers filter, the elements, which are included in the choosenAnswers, and return the length of the matched elements
-//const diff = correctAnswers.filter(element => choosenAnswers.includes(element)); +return length!!!
+//on the correctAnswers filter, the elements, which are included in the choosenAnswers, and return the length of the matched elements: DONE
+//const diff = correctAnswers.filter(element => choosenAnswers.includes(element)); +return length!!!: DONE
+//save this length in a state, Scores: DONE
 //onSubmit, trap the focus and show the Modal, where the scores (diffs length) can be shown
