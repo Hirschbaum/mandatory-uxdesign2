@@ -2,6 +2,7 @@ import React from 'react';
 import './Modal.css';
 import ReactDOM from 'react-dom';
 import {Link} from 'react-router-dom';
+import FocusTrap from 'focus-trap-react';
 
 const Modal = (props) => {
     
@@ -16,6 +17,7 @@ const Modal = (props) => {
     }
 
     return ReactDOM.createPortal(
+        <FocusTrap>
         <div className="modalContainer">
             <div className="modalBox">
                 <div className="modalHeadline">
@@ -42,7 +44,7 @@ const Modal = (props) => {
                     </button>
                 </div>
             </div>
-        </div>,
+        </div></FocusTrap>,
         document.body
     );
 };
