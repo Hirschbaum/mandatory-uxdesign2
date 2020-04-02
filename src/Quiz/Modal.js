@@ -3,7 +3,10 @@ import './Modal.css';
 import ReactDOM from 'react-dom';
 
 const Modal = (props) => {
-
+    /*const handleModal = () => {
+		props.updateModal(false);
+    };*/
+    
     return ReactDOM.createPortal(
         <div className="modalContainer">
             <div className="modalBox">
@@ -12,8 +15,8 @@ const Modal = (props) => {
                 </div>
 
                 <p>
-                    You have answered 10/
-                <span className='correct--answers'>10 </span>
+                    You have answered 
+                <span className='correct--answers'> 10/ {props.scores} </span>
                 correctly!
             </p>
 

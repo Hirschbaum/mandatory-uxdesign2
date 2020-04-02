@@ -2,6 +2,7 @@ import React from 'react';
 import './Quiz.css';
 //import { Helmet } from 'react-helmet';
 import axios from 'axios';
+import Modal from './Modal';
 
 class Quiz extends React.Component {
     constructor(props) {
@@ -63,9 +64,10 @@ class Quiz extends React.Component {
     }
 
     //----show modal, if it is true, function from App.js
-    handleModal = () => {
-		this.props.handleModal(this.state.showModal);
-	}
+    //handleModal = () => {
+    //    this.setState({showModal: true});
+		//this.props.handleModal(this.state.showModal);
+	//}
 
     //-------------------------------- choosen answers
     hanldeRadioSelect = (e) => {
@@ -164,8 +166,7 @@ class Quiz extends React.Component {
                     <button
                         onClick={() => this.countScores()}
                         onMouseUp={this.onMouseUp}
-                        scores={this.state.scores}
-                        showmodal={this.showModal}
+                        
                         className="mdc-button mdc-button--raised"
                         style={{ backgroundColor: '#484C7F' }}
                     >  <span className="mdc-button__ripple"></span> Submit
@@ -173,7 +174,8 @@ class Quiz extends React.Component {
                     : null }
                     
                     <br />
-
+                    
+                    {this.state.showModal ? <Modal scores={this.state.scores} getquiz={this.getQuiz} /> : null}
                 </div>
             </div>
         )
