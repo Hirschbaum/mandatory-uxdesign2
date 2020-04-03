@@ -25,7 +25,7 @@ class Quiz extends React.Component {
     countScores = () => {
         let diff = this.state.correctAnswers.filter(element => this.state.choosenAnswers.includes(element));
         this.setState({scores: diff.length});
-        console.log('SCORES HERE ', this.state.scores ); //working
+        //console.log('SCORES HERE ', this.state.scores ); //working
     }
 
     getQuiz = () => {

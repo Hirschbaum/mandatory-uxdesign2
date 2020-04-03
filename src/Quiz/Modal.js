@@ -21,13 +21,14 @@ const Modal = (props) => {
         <div className="modalContainer">
             <div className="modalBox">
                 <div className="modalHeadline">
-                    <h3> Congratulations!</h3>
+                    <h3> {props.scores !== 0 ? 'Congratulations!' : 'Maybe next time...'}</h3>
                 </div>
 
                 <p>
                     You have answered
-                <span className='correct--answers'> 10/ {props.scores} </span>
-                correctly!
+                <span className='correct--answers'> {props.scores} /10 </span>
+                {props.scores !== 0 ? ' correctly!' : '.'}
+                
             </p>
 
 
@@ -36,9 +37,10 @@ const Modal = (props) => {
                        <Link style={{textDecoration: 'none'}} to='/'>Back to Main</Link>
                     </button>
 
-                    <button
+                    <button 
                         className="modalButtons blueButtons"
                         onClick={()=> newQuiz()}
+                        onKeyPress={() => newQuiz()}
                     >
                         <Link style={{textDecoration: 'none', color: '#fff'}}  to='/quiz'>New Quiz</Link>
                     </button>
